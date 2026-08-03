@@ -23,13 +23,13 @@ def create_file() -> None:
     file_name = None
     if "-f" in command:
         f_index = command.index("-f")
-        if f_index + 1 < (
+        if (f_index + 1 < 
             len(command) and not command[f_index + 1].startswith("-")
         ):
             file_name = command[f_index + 1]
 
     if file_name:
-        file_path = os.path.join(
+        file_path =  (os.path.join
             (dir_path, file_name) if dir_path else file_name
         )
         file_exists = os.path.exists(file_path)
@@ -46,3 +46,5 @@ def create_file() -> None:
                 f.write("\n")
             f.write(current_time + "\n")
             f.write("\n".join(file_content) + "\n")
+
+create_file()
