@@ -20,9 +20,9 @@ def create_file() -> None:
             dir_path = os.path.join(*dir_args)
             os.makedirs(dir_path, exist_ok=True)
 
-    if not "-f" in command:
-            return
-    
+    if "-f" not in command:
+        return
+
     file_name = None
     f_index = command.index("-f")
     for name in command[f_index + 1:]:
@@ -32,7 +32,7 @@ def create_file() -> None:
 
     if not file_name:
         return
-    
+
     file_path = os.path.join(dir_path, file_name) if dir_path else file_name
     with open(file_path, "a") as f:
         file_content = []
