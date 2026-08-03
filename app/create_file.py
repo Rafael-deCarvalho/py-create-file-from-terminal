@@ -4,47 +4,44 @@ import os
 
 
 def create_file() -> None:
-    command_parts = sys.argv[1:]
+
+    command = sys.argv[1:]
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    dir_list = []
-    if "-d" in command_parts:
-        dir_index = command_parts.index("-d")
-    for arg in command_parts[dir_index + 1:]:
-        if arg.startswith("-"):
+    dir_path = None
+    dir_args = []
+    if "-d" in command:
+        d_index = command.index("-d")
+        for arg in command[d_index + 1:]:
+            if arg.startswith("-"):
+                break
+            dir_args.append(arg)
+        if dir_args:
+            dir_path = os.path.join(*dir_args)
+            os.makedirs(dir_path, exist_ok=True)
+
+    if not "-f" in command:
+            return
+    
+    file_name = None
+    f_index = command.index("-f")
+    for name in command[f_index + 1:]:
+        if name.startswith("-"):
             break
-        dir_list.append(arg)
+        file_name = name
 
-    for directory in dir_list:
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-    if "-f" in command_parts:
-        file_index = command_parts.index("-f")
-    for arg in command_parts[file_index + 1:]:
-        if arg.startswith("-"):
-            break
-        if os.path.exists(arg):
-            content = []
-            line = 0
-            while True:
-                content_line = input("Enter content line: ")
-                if content_line.lower() == "stop":
-                    break
-                line += 1
-                content.append(f"Line{line} {content_line}")
-            with open(arg, "a") as f:
-                f.write(current_time)
-                f.write("\n".join(content))
-
-        with open(arg, "w") as f:
-            content = []
-            line = 0
-            while True:
-                content_line = input("Enter content line: ")
-                if content_line.lower() == "stop":
-                    break
-                line += 1
-                content.append(f"Line{line} {content_line}")
-            f.write(current_time)
-            f.write("\n".join(content))
+    if not file_name:
+        return
+    
+    file_path = os.path.join(dir_path, file_name) if dir_path else file_name
+    with open(file_path, "a") as f:
+        file_content = []
+        line = 1
+        while True:
+            line_content = input("Enter content line: ")
+            if line_content == "stop":
+                break
+            file_content.append(f"Line{line} {line_content}")
+            line += 1
+        f.write(current_time + "\n")
+        f.write("\n".join(file_content) + "\n")
